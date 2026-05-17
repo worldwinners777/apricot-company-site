@@ -2403,7 +2403,7 @@ body > .ac-launcher,
   .ac-chat {
     right: 12px;
     left: 12px;
-    bottom: 12px;
+    bottom: 36px;                /* 全体を少し上に。下バー付近の窮屈感を解消＆上余白を圧縮 */
     width: calc(100vw - 24px);   /* 左右の余白を狭め、本体を少し横広に */
     max-width: none;
     height: 80vh;                /* スマホでも安定した高さを確保 */
