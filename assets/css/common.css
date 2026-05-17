@@ -2401,15 +2401,26 @@ body > .ac-launcher,
 
 @media (max-width: 480px) {
   .ac-chat {
-    right: 16px;
-    left: 16px;
+    right: 12px;
+    left: 12px;
     bottom: 12px;
-    width: calc(100vw - 32px);
+    width: calc(100vw - 24px);   /* 左右の余白を狭め、本体を少し横広に */
     max-width: none;
-    height: auto;
-    max-height: 72vh;
-    max-height: 72dvh;
+    height: 80vh;                /* スマホでも安定した高さを確保 */
+    height: 80dvh;
+    max-height: 82vh;
+    max-height: 82dvh;
     border-radius: 14px;
+  }
+  /* 本文エリアを広げる：ヘッダー・フッターはコンパクトに、パディングも軽めに */
+  .ac-chat__head {
+    padding: 10px 12px;
+  }
+  .ac-chat__body {
+    padding: 12px;
+  }
+  .ac-chat__foot {
+    padding: 6px 10px;
   }
 }
 
