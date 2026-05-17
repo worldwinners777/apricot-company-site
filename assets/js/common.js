@@ -8,14 +8,36 @@
   'use strict';
 
   // 現在ページから assets/js/common.js までの相対 prefix を捕捉
-  var PATH_PREFIX = '';
-  var _cs = document.currentScript;
-  if (_cs && _cs.getAttribute('src')) {
-    var _m = _cs.getAttribute('src').match(/^((?:\.\.\/)+)/);
-    if (_m) PATH_PREFIX = _m[1];
+  // document.currentScript が null になるケース（defer/順序差）にも備えて
+  // <link rel="stylesheet"> や <script src="common.js"> からフォールバック抽出する
+  function detectPrefix() {
+    var cs = document.currentScript;
+    var src = cs && cs.getAttribute && cs.getAttribute('src');
+    if (!src) {
+      var s = document.querySelector('script[src$="assets/js/common.js"]');
+      if (s) src = s.getAttribute('src');
+    }
+    if (!src) {
+      var l = document.querySelector('link[rel="stylesheet"][href$="assets/css/common.css"]');
+      if (l) src = l.getAttribute('href');
+    }
+    if (!src) return '';
+    var m = src.match(/^((?:\.\.\/)+)/);
+    return m ? m[1] : '';
+  }
+  var PATH_PREFIX = detectPrefix();
+
+  // 読込タイミングに依存しない初期化ヘルパー
+  function ready(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, { once: true });
+    } else {
+      // すでに DOM 解析完了：即実行（defer 読込時はこちらに来る場合あり）
+      fn();
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
+  ready(function () {
     // --- Hamburger ---
     var hamburger = document.querySelector('[data-hamburger]');
     var mobileNav = document.querySelector('[data-mobile-nav]');
