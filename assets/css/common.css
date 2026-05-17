@@ -157,9 +157,11 @@ button { font-family: inherit; cursor: pointer; }
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 100;
-  background: rgba(255,255,255,.96);
-  backdrop-filter: saturate(180%) blur(8px);
+  z-index: 1000;                    /* 本文の各 stacking-context（hero 等）より確実に手前 */
+  background: rgba(255,255,255,.98);
+  /* NOTE: backdrop-filter は付けない。
+     付けると CSS 仕様により子孫の position:fixed がヘッダー要素基準になり、
+     .mobile-nav がヘッダー枠内に閉じ込められて表示崩れを起こす。 */
   border-bottom: 1px solid var(--c-border);
 }
 .site-header__inner {
@@ -307,8 +309,9 @@ button { font-family: inherit; cursor: pointer; }
   overflow-y: auto;
   transform: translateX(100%);
   transition: transform .25s var(--ease);
-  z-index: 99;
+  z-index: 999;                     /* ヘッダー(1000)直下、本文の各 stacking-context より確実に手前 */
   border-top: 1px solid var(--c-border);
+  box-shadow: 0 8px 24px rgba(15,42,85,.06);
 }
 .mobile-nav.is-open { transform: translateX(0); }
 @media (min-width: 1000px) { .mobile-nav { display: none; } }
