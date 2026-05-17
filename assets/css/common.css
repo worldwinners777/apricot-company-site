@@ -2329,3 +2329,284 @@ button { font-family: inherit; cursor: pointer; }
   width: 100%;
   max-width: 260px;
 }
+
+/* ==========================================================================
+   AI相談チャット（簡易ボット・全ページ右下に固定挿入）
+   - z-index は 990。スマホメニュー(.mobile-nav z=999)・ヘッダー(.site-header z=1000)
+     より下に置き、メニュー展開時は自然に隠れる。
+   - 実 AI API なし。選択肢式で関連サービス／お問い合わせへ誘導するだけ。
+   ========================================================================== */
+
+/* --- 右下フローティング起動ボタン --- */
+.ac-launcher {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, var(--c-navy) 0%, var(--c-blue) 100%);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(15,42,85,.28);
+  cursor: pointer;
+  z-index: 990;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.ac-launcher:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(15,42,85,.38); }
+.ac-launcher.is-hidden { display: none; }
+.ac-launcher__icon {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,.18);
+  border-radius: 50%;
+  color: #fff;
+}
+.ac-launcher__icon svg { display: block; }
+
+@media (max-width: 480px) {
+  .ac-launcher {
+    right: 14px;
+    bottom: 14px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+
+/* --- チャットウィンドウ本体 --- */
+.ac-chat {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  max-height: 75vh;
+  max-height: 75dvh;
+  background: #fff;
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  box-shadow: 0 20px 48px rgba(15,42,85,.22);
+  z-index: 990;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: inherit;
+}
+.ac-chat.is-open { display: flex; }
+
+@media (max-width: 480px) {
+  .ac-chat {
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+    width: auto;
+    max-width: none;
+    max-height: 78vh;
+    max-height: 78dvh;
+    border-radius: 14px;
+  }
+}
+
+/* ヘッダー */
+.ac-chat__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, var(--c-navy) 0%, #163A6E 100%);
+  color: #fff;
+}
+.ac-chat__title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ac-chat__avatar {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-cyan) 100%);
+  border-radius: 8px;
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 14px;
+  color: #fff;
+  flex: 0 0 auto;
+}
+.ac-chat__title-text { min-width: 0; }
+.ac-chat__title-text strong { display: block; font-size: 14px; line-height: 1.2; letter-spacing: .04em; }
+.ac-chat__title-text small  { display: block; font-size: 11px; color: #BCC8DE; margin-top: 2px; }
+.ac-chat__close {
+  width: 30px; height: 30px;
+  flex: 0 0 auto;
+  background: rgba(255,255,255,.12);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid; place-items: center;
+  transition: background .15s var(--ease);
+}
+.ac-chat__close:hover { background: rgba(255,255,255,.25); }
+
+/* 本文（メッセージ表示エリア） */
+.ac-chat__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px;
+  background: #F5F8FC;
+}
+
+/* フッター（最初に戻る） */
+.ac-chat__foot {
+  padding: 10px 14px;
+  border-top: 1px solid var(--c-border);
+  background: #fff;
+  text-align: center;
+}
+.ac-chat__reset {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-sub);
+  background: transparent;
+  border: 1px solid var(--c-border);
+  border-radius: 999px;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.ac-chat__reset:hover { color: var(--c-blue); border-color: var(--c-blue); }
+
+/* メッセージ */
+.ac-msg {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ac-msg--user { justify-content: flex-end; }
+.ac-msg__avatar {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-cyan) 100%);
+  color: #fff;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-weight: 800;
+  font-size: 12px;
+  flex: 0 0 auto;
+}
+.ac-msg__bubble {
+  flex: 0 1 auto;
+  max-width: 86%;
+  background: #fff;
+  border: 1px solid var(--c-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--c-text);
+  word-break: break-word;
+}
+.ac-msg--user .ac-msg__bubble {
+  background: var(--c-blue);
+  color: #fff;
+  border-color: var(--c-blue);
+}
+
+/* 選択肢ボタン群 */
+.ac-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+.ac-choice {
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-navy);
+  background: #fff;
+  border: 1px solid var(--c-blue-l, #DCE7FA);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background .15s var(--ease), border-color .15s var(--ease), transform .15s var(--ease);
+}
+.ac-choice:hover {
+  background: var(--c-blue-l, #DCE7FA);
+  border-color: var(--c-blue);
+  transform: translateX(2px);
+}
+
+/* おすすめサービスカード */
+.ac-card {
+  background: #fff;
+  border: 1px solid var(--c-border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 10px;
+}
+.ac-card__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: var(--c-blue);
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+.ac-card__title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--c-navy);
+  line-height: 1.45;
+  margin: 0 0 6px;
+}
+.ac-card__desc {
+  font-size: 12.5px;
+  color: var(--c-text-sub);
+  line-height: 1.8;
+  margin: 0 0 10px;
+}
+.ac-card__links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ac-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-decoration: none;
+  transition: background .15s var(--ease), color .15s var(--ease), border-color .15s var(--ease);
+}
+.ac-link--service {
+  background: var(--c-bg-soft);
+  color: var(--c-navy);
+  border: 1px solid var(--c-border);
+}
+.ac-link--service:hover {
+  background: var(--c-blue-l, #DCE7FA);
+  border-color: var(--c-blue);
+  color: var(--c-blue);
+}
+.ac-link--contact {
+  background: var(--c-blue);
+  color: #fff;
+  border: 1px solid var(--c-blue);
+}
+.ac-link--contact:hover {
+  background: var(--c-navy);
+  border-color: var(--c-navy);
+  color: #fff;
+}
