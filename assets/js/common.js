@@ -109,6 +109,9 @@
   function initAcChat(prefix) {
     if (document.querySelector('[data-ac-chat]')) return; // 多重挿入防止
 
+    // LINE 公式アカウント URL（仮。正式 URL に差し替え予定）
+    var LINE_URL = 'https://line.me/R/ti/p/@apricot';
+
     // ----- データ：6カテゴリ × ステップ2の絞り込み質問 × 回答 -----
     var FLOW = [
       {
@@ -335,15 +338,24 @@
     }
 
     function answerHtml(cat) {
+      // 推奨サービスへのリンク（contact kind は除外。下で常に問い合わせ＋LINEを表示）
       var s = esc(cat.answer) +
               '<div class="ac-card">' +
                 '<p class="ac-card__label">RECOMMEND</p>' +
                 '<div class="ac-card__links">';
       cat.links.forEach(function (lk) {
-        var cls = lk.kind === 'contact' ? 'ac-link--contact' : 'ac-link--service';
-        s += '<a class="ac-link ' + cls + '" href="' + esc(prefix + lk.href) + '">' +
+        if (lk.kind === 'contact') return; // 旧形式の contact 行はスキップ
+        s += '<a class="ac-link ac-link--service" href="' + esc(prefix + lk.href) + '">' +
                esc(lk.label) + ' <span aria-hidden="true">→</span></a>';
       });
+      // 共通の問い合わせ導線：フォーム＋LINE
+      s += '<a class="ac-link ac-link--contact" href="' + esc(prefix + 'contact/index.html') + '">' +
+             'お問い合わせフォームで相談する <span aria-hidden="true">→</span></a>';
+      s += '<a class="ac-link ac-link--line" href="' + LINE_URL + '" target="_blank" rel="noopener">' +
+             '<span class="ac-link__icon" aria-hidden="true">' +
+               '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 4H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3v3.6L13 17h6a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM8.5 13H7.4V9.4h1.1V13zm2.3 0H9.6l-1.4-2v2H7.2V9.4h.7l1.4 2v-2h1.1V13zm3.4-2.8h-1.6v.6h1.5v.7h-1.5v.7h1.6V13H11.5V9.4h2.7v.8zm3.3 2.8h-2.7V9.4h1.1v2.9h1.6V13z"/></svg>' +
+             '</span>' +
+             'LINEで相談する <span aria-hidden="true">→</span></a>';
       s += '</div></div>' +
            '<div class="ac-actions">' +
              '<button type="button" class="ac-action ac-action--ghost" data-ac-restart>さらに相談する</button>' +
@@ -388,8 +400,14 @@
       launcher.classList.remove('is-hidden');
     }
     function resetToIntro() {
-      history = [];
-      pushAndRender({ step: 0, mainIndex: null, subIndex: null });
+      // 履歴を確実にクリア
+      history.length = 0;
+      // 表示エリアも明示的に空にしてから再描画
+      body.innerHTML = '';
+      history.push({ step: 0, mainIndex: null, subIndex: null });
+      renderState(history[0]);
+      // 最初のメッセージから読み始められるよう上端にスクロール
+      body.scrollTop = 0;
     }
     function goBack() {
       if (history.length <= 1) return;

@@ -2606,6 +2606,25 @@ body > .ac-launcher,
   border-color: var(--c-navy);
   color: #fff;
 }
+/* LINE 相談ボタン：白ベース＋緑アクセント（落ち着いた配色） */
+.ac-link--line {
+  background: #fff;
+  color: #06A444;
+  border: 1px solid #06C755;
+  gap: 6px;
+}
+.ac-link--line:hover {
+  background: #06C755;
+  color: #fff;
+  border-color: #06C755;
+}
+.ac-link--line .ac-link__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin-right: 2px;
+}
 
 /* 回答下のアクション（さらに相談する／最初に戻る） */
 .ac-actions {
