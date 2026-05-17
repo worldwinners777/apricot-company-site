@@ -2606,8 +2606,13 @@ body > .ac-launcher,
   border-color: var(--c-navy);
   color: #fff;
 }
-/* LINE 相談ボタン：白ベース＋緑アクセント（落ち着いた配色） */
+/* LINE 相談ボタン：白ベース＋緑アクセント（落ち着いた配色）
+   高い詳細度＋!important で必ず表示する（旧キャッシュ環境でも消えない） */
+.ac-card__links .ac-link--line,
 .ac-link--line {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   background: #fff;
   color: #06A444;
   border: 1px solid #06C755;

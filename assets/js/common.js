@@ -127,7 +127,6 @@
         links: [
           { label: 'システム受託開発を見る',   href: 'service/system-development/index.html', kind: 'service' },
           { label: 'ITコンサルティングを見る', href: 'service/it-consulting/index.html',     kind: 'service' },
-          { label: '相談する',                href: 'contact/index.html',                   kind: 'contact' }
         ]
       },
       {
@@ -142,7 +141,6 @@
         answer: 'Web・アプリ制作が合いそうです。企業サイト、サービスサイト、Webシステム、スマートフォン対応サイトなど、目的に合わせて制作できます。',
         links: [
           { label: 'Web・アプリ制作を見る', href: 'service/web-app/index.html', kind: 'service' },
-          { label: '相談する',              href: 'contact/index.html',         kind: 'contact' }
         ]
       },
       {
@@ -158,7 +156,6 @@
         answer: 'AI 導入支援が合いそうです。ChatGPT や Claude などの生成AIを、社内業務で安全に使える形に整え、実務に合わせて導入できます。',
         links: [
           { label: 'AI導入支援を見る', href: 'service/ai-support/index.html', kind: 'service' },
-          { label: '相談する',         href: 'contact/index.html',            kind: 'contact' }
         ]
       },
       {
@@ -174,7 +171,6 @@
         links: [
           { label: 'グローバル支援を見る',   href: 'service/global-support/index.html', kind: 'service' },
           { label: '人材・運用支援を見る',   href: 'service/hr-operation/index.html',   kind: 'service' },
-          { label: '相談する',               href: 'contact/index.html',                kind: 'contact' }
         ]
       },
       {
@@ -189,7 +185,6 @@
         answer: 'パッケージ・サービス提供が合いそうです。既存の業務支援サービスやパッケージを活用し、導入から運用まで整理できます。',
         links: [
           { label: 'パッケージ・サービス提供を見る', href: 'service/package/index.html', kind: 'service' },
-          { label: '相談する',                       href: 'contact/index.html',         kind: 'contact' }
         ]
       },
       {
@@ -204,7 +199,6 @@
         answer: '内容が決まっていない段階でも問題ありません。現在の業務や課題を整理しながら、必要な支援内容をご提案できます。',
         links: [
           { label: '事業内容を見る', href: 'service/index.html',  kind: 'service' },
-          { label: '相談する',       href: 'contact/index.html',  kind: 'contact' }
         ]
       }
     ];
